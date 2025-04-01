@@ -13,8 +13,8 @@ from common.cache_data.application_access_token_cache import get_application_acc
 
 class StaticHeadersMiddleware(MiddlewareMixin):
     def process_response(self, request, response):
-        if request.path.startswith('/ui/chat/'):
-            access_token = request.path.replace('/ui/chat/', '')
+        if request.path.startswith('/chat/'):
+            access_token = request.path.replace('/chat/', '')
             application_access_token = get_application_access_token(access_token, True)
             if application_access_token is not None:
                 white_active = application_access_token.get('white_active', False)
@@ -26,7 +26,7 @@ class StaticHeadersMiddleware(MiddlewareMixin):
                     response[
                         'Content-Security-Policy'] = f'frame-ancestors {" ".join(white_list)}'
                 response.content = (response.content.decode('utf-8').replace(
-                    '<link rel="icon" href="/ui/favicon.ico" />',
+                    '<link rel="icon" href="/favicon.ico" />',
                     f'<link rel="icon" href="{application_icon}" />')
                 .replace('<title>MaxKB</title>', f'<title>{application_name}</title>').encode(
                     "utf-8"))

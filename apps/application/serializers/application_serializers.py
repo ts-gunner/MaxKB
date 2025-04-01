@@ -269,7 +269,7 @@ class ApplicationSerializer(serializers.Serializer):
                 access_token=self.data.get('token')).first()
             is_draggable = 'false'
             show_guide = 'true'
-            float_icon = f"{self.data.get('protocol')}://{self.data.get('host')}/ui/MaxKB.gif"
+            float_icon = f"{self.data.get('protocol')}://{self.data.get('host')}/MaxKB.gif"
             xpack_cache = DBModelManage.get_model('xpack_cache')
             X_PACK_LICENSE_IS_VALID = False if xpack_cache is None else xpack_cache.get('XPACK_LICENSE_IS_VALID', False)
             # 获取接入的query参数
@@ -510,9 +510,10 @@ class ApplicationSerializer(serializers.Serializer):
     class Create(serializers.Serializer):
         user_id = serializers.UUIDField(required=True, error_messages=ErrMessage.uuid(_("User ID")))
 
-        @valid_license(model=Application, count=5,
-                       message=_(
-                           'The community version supports up to 5 applications. If you need more applications, please contact us (https://fit2cloud.com/).'))
+        #  取消限制
+        # @valid_license(model=Application, count=5,
+        #                message=_(
+        #                    'The community version supports up to 5 applications. If you need more applications, please contact us (https://fit2cloud.com/).'))
         @transaction.atomic
         def insert(self, application: Dict):
             application_type = application.get('type')
@@ -762,7 +763,7 @@ class ApplicationSerializer(serializers.Serializer):
                                model_params_setting=application.get('model_params_setting'),
                                tts_model_params_setting=application.get('tts_model_params_setting'),
                                problem_optimization=application.get('problem_optimization'),
-                               icon="/ui/favicon.ico",
+                               icon="/favicon.ico",
                                work_flow=work_flow,
                                type=application.get('type'),
                                problem_optimization_prompt=application.get('problem_optimization_prompt'),

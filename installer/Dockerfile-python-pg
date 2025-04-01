@@ -1,5 +1,5 @@
-FROM python:3.11-slim-bullseye AS python-stage
-FROM postgres:15.8-bullseye
+FROM swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/python:3.11-slim AS python-stage
+FROM swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/postgres:15-bullseye
 
 ARG DEPENDENCIES="                    \
         libexpat1-dev                 \

@@ -1,5 +1,5 @@
 FROM ghcr.io/1panel-dev/maxkb-vector-model:v1.0.1 AS vector-model
-FROM node:18-alpine3.18 AS web-build
+FROM swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/node:18-alpine AS web-build
 COPY ui ui
 RUN cd ui && \
     npm install && \
@@ -8,7 +8,7 @@ RUN cd ui && \
 FROM ghcr.io/1panel-dev/maxkb-python-pg:python3.11-pg15.8 AS stage-build
 
 ARG DEPENDENCIES="                    \
-        python3-pip"
+    python3-pip"
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends $DEPENDENCIES && \
@@ -21,13 +21,18 @@ RUN mkdir -p /opt/maxkb/app /opt/maxkb/model /opt/maxkb/conf && \
 
 COPY --from=web-build ui /opt/maxkb/app/ui
 WORKDIR /opt/maxkb/app
+
+
 RUN python3 -m venv /opt/py3 && \
-    pip install poetry==1.8.5 --break-system-packages && \
+    pip install poetry==1.8.5 && \
     poetry config virtualenvs.create false && \
     . /opt/py3/bin/activate && \
     if [ "$(uname -m)" = "x86_64" ]; then sed -i 's/^torch.*/torch = {version = "^2.2.1+cpu", source = "pytorch"}/g' pyproject.toml; fi && \
+    poetry lock && \
     poetry install && \
     export MAXKB_CONFIG_TYPE=ENV && python3 /opt/maxkb/app/apps/manage.py compilemessages
+
+
 
 FROM ghcr.io/1panel-dev/maxkb-python-pg:python3.11-pg15.8
 ARG DOCKER_IMAGE_TAG=dev \
@@ -63,6 +68,7 @@ RUN chmod 755 /opt/maxkb/app/installer/run-maxkb.sh && \
     cp -r /opt/maxkb/model/base/hub /opt/maxkb/model/tokenizer && \
     cp -f /opt/maxkb/app/installer/run-maxkb.sh /usr/bin/run-maxkb.sh && \
     cp -f /opt/maxkb/app/installer/init.sql /docker-entrypoint-initdb.d && \
+    sed -i 's/\r$//' /usr/bin/run-maxkb.sh && \
     curl -L --connect-timeout 120 -m 1800 https://resource.fit2cloud.com/maxkb/ffmpeg/get-ffmpeg-linux | sh && \
     mkdir -p /opt/maxkb/app/sandbox/python-packages &&  \
     find /opt/maxkb/app -mindepth 1 -not -name 'sandbox' -exec chmod 700 {} + && \
@@ -74,5 +80,9 @@ RUN chmod 755 /opt/maxkb/app/installer/run-maxkb.sh && \
 
 EXPOSE 8080
 
-ENTRYPOINT ["bash", "-c"]
-CMD [ "/usr/bin/run-maxkb.sh" ]
+# ENTRYPOINT ["bash", "-c"]
+# CMD [ "/usr/bin/run-maxkb.sh" ]
+
+# --debug
+
+CMD ["tail", "-f", "/dev/null"]

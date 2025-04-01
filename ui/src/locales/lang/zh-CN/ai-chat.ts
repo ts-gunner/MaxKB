@@ -31,7 +31,7 @@ export default {
     errorLimitMessage: '抱歉，您的提问已达到最大限制，请明天再来吧！',
     answerMessage: '抱歉，没有查找到相关内容，请重新描述您的问题或提供更多信息。',
     stopAnswer: '已停止回答',
-    answerLoading: '回答中',
+    answerLoading: '请稍等',
     recorderTip: `<p>该功能需要使用麦克风，浏览器禁止不安全页面录音，解决方案如下：<br/>
 1、可开启 https 解决；<br/>
 2、若无 https 配置则需要修改浏览器安全配置，Chrome 设置如下：<br/>

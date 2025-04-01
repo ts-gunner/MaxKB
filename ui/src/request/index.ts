@@ -27,6 +27,7 @@ instance.interceptors.request.use(
     const token = user.getToken()
     const language = user.getLanguage()
     config.headers['Accept-Language'] = `${language}`
+    config.headers["X-API-Token"] = "pgpy"
     if (token) {
       config.headers['AUTHORIZATION'] = `${token}`
     }
@@ -207,6 +208,7 @@ export const postStream: (url: string, data?: unknown) => Promise<Result<any> | 
   const token = user.getToken()
   const language = user.getLanguage()
   const headers: HeadersInit = { 'Content-Type': 'application/json' }
+  headers["X-API-Token"] = "pgpy"
   if (token) {
     headers['AUTHORIZATION'] = `${token}`
   }

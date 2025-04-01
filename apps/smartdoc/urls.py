@@ -65,7 +65,7 @@ def page_not_found(request, exception):
     if not os.path.exists(index_path):
         return HttpResponse("页面不存在", status=404)
     content = get_index_html(index_path)
-    if request.path.startswith('/ui/chat/'):
+    if request.path.startswith('/chat/'):
         return HttpResponse(content, status=200)
     return HttpResponse(content, status=200, headers={'X-Frame-Options': 'DENY'})
 

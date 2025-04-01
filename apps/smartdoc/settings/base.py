@@ -71,7 +71,7 @@ ROOT_URLCONF = 'smartdoc.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['apps/static/ui'],
+        'DIRS': ['apps/static'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

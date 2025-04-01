@@ -1,0 +1,19 @@
+
+services:
+  postgres:
+    build:
+      context: .
+      dockerfile: Dockerfile.pgsql
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456   # 密码
+      POSTGRES_DB: postgres  #默认数据库
+    ports:
+      - "5432:5432"
+    volumes:
+      - E://data/pgsql:/var/lib/postgresql/data
+    restart: always
+
+
+
